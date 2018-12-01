@@ -45,19 +45,11 @@
 #Starting with a frequency of zero, what is the resulting frequency after all of
 #the changes in frequency have been applied?
 
-import os
-import strutils
+import os, strutils
 
-var
-  delta: int
-  sign: char
-  frequency = 0
+var frequency = 0
 
-for line in open(paramStr(1), fmRead).lines:
-  sign  = line[0]
-  delta = line[1 .. line.high].parseInt
-  if sign == '-':
-    delta = 0 - delta
-  frequency += delta
+for delta in open(paramStr(1), fmRead).lines:
+  frequency += delta.parseInt
 
 echo frequency
