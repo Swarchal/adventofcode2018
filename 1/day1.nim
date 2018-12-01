@@ -54,8 +54,8 @@ var
   frequency = 0
 
 for line in open(paramStr(1), fmRead).lines:
-  delta = parseInt(line[1 .. ^ 1])
-  sign = line[0]
+  sign  = line[0]
+  delta = line[1 .. line.high].parseInt
   if sign == '-':
     delta = 0 - delta
   frequency += delta
