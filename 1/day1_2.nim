@@ -32,17 +32,17 @@ import os, strutils, sequtils, sets
 
 proc parse_file(path: string): seq[int] =
   result = newSeq[int]()
-  for i in open(path, fmRead).lines:
-    result.add(i.parseInt)
+  for line in open(path, fmRead).lines:
+    result.add(line.parseInt)
 
 let input = parse_file(paramStr(1))
 
 var
-  repeated: bool
-  frequency = 0
+  repeated    : bool
+  frequency   = 0
   frequencies = initSet[int]()
 
-proc adjust_frequency(frequency:int): int =
+proc adjust_frequency(frequency: int): int =
   result = frequency
   for delta in input:
     result += delta
