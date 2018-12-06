@@ -35,25 +35,25 @@
 #
 #How many units remain after fully reacting the polymer you scanned?
 
-import os, strutils, sequtils
+import os, strutils, sequtils, strformat
 
-proc read_input(path: string): string =
+proc read_input*(path: string): string =
   var output: seq[string]
   for line in open(path).lines:
     output.add(line)
   return output[0]
 
 
-proc to_seq(x: string): seq[char] =
+proc to_seq*(x: string): seq[char] =
   for i in x:
     result.add(i)
 
 
-func is_shorter_than(new_str: seq[char], orig_str: seq[char]): bool =
+func is_shorter_than*(new_str: seq[char], orig_str: seq[char]): bool =
   return new_str.len < orig_str.len
 
 
-func is_reactive(diatom: seq[char]): bool =
+func is_reactive*(diatom: seq[char]): bool =
   assert len(diatom) == 2
   var
     all_lower = diatom.map(toLowerAscii)
@@ -72,22 +72,28 @@ func is_reactive(diatom: seq[char]): bool =
       return false
 
 
-proc reduce(polymer: seq[char]): seq[char] =
+proc reduce*(polymer: seq[char]): seq[char] =
   var
     polymer = polymer
   for i in 0 .. polymer.high - 1:
     if polymer[i..i+1].is_reactive:
       polymer.delete(i, i+1)
+      break
   return polymer
+
+proc repeated_reduce*(polymer: seq[char]): seq[char] =
+  var
+    current_polymer = polymer
+    last_polymer    = polymer
+    still_reducing  = true
+  while still_reducing:
+    last_polymer    = current_polymer
+    current_polymer = day5.reduce(current_polymer)
+    still_reducing  = current_polymer.is_shorter_than(last_polymer)
+  return current_polymer
 
 
 when isMainModule:
   var
-    polymer   = read_input(os.paramStr(1)).toSeq
-    last_polymer = polymer
-    still_reducing = true
-  while still_reducing:
-    last_polymer = polymer
-    polymer = reduce(polymer)
-    still_reducing = polymer.is_shorter_than(last_polymer)
-  echo polymer.len
+    polymer = read_input(os.paramStr(1)).toSeq
+  echo polymer.repeated_reduce.len
